@@ -21,8 +21,8 @@
 
 <nav>
 	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="userPage">User page</a>
-	<a href="logout">Logout</a>
+	<a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a>
+	<a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
 <hr/>
 
@@ -33,18 +33,10 @@
 	<br/>
 	<br/>
 	<br/>
-	Number:<input type="text" name="userNumber" value="${sessionScope.user.phoneNumber}"/><br/><br/>
+	Number: ${sessionScope.user.phoneNumber}<br/><br/>
+	Role: ${role.name.toString()}<br/><br/>
 	Password:<input type="password" name="userPass" value="${sessionScope.user.password}"/><br/><br/>
 	Confirm password:<input type="password" name="userPassConf"/><br/><br/>
-	<%--Role:
-	<select class="browser-default" name="userRole">
-		<c:forEach items="${requestScope.roles}" var="role">
-			<option value="${role.id}" ${role.id == sessionScope.user.roleId ? 'selected' : ''}>
-					${role.name}
-			</option>
-		</c:forEach>
-	</select>--%>
-	<input type="hidden" name="userRole" value="user">
 	<br/><br/>
 
 	Email:<input type="text" name="userEmail" value="${userDetails.email}"/><br/><br/>

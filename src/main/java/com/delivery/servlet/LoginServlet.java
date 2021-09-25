@@ -4,6 +4,8 @@ import com.delivery.dao.DAOException;
 import com.delivery.dao.DAOFactory;
 import com.delivery.entity.User;
 import com.delivery.logic.UserManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,16 +17,15 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
-	/*@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("jsp/login.jsp");
-	}*/
+	private static final Logger log = LogManager.getLogger(LoginServlet.class);
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		log.trace("LoginServlet#doPost");
+
 		String redirect = "jsp/login.jsp";
 		String message = "";
-		boolean valid = false;
+		boolean valid;
 
 		String phoneNumber = request.getParameter("userNumber");
 		String password = request.getParameter("userPass");
@@ -32,27 +33,33 @@ public class LoginServlet extends HttpServlet {
 		try {
 			valid = UserManager.getInstance(DAOFactory.getDAOFactory()).validate(phoneNumber, password);
 			if (valid) {
-				redirect = "userPage";
+				redirect = "jsp/userPage.jsp";
 
-				//long id= UserManager.getInstance(DAOFactory.getDAOFactory()).getByPhoneNumber(phoneNumber).getId();
+				// put user into session
 				User user = UserManager.getInstance(DAOFactory.getDAOFactory()).getByPhoneNumber(phoneNumber);
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
+				log.info("user " + user.getPhoneNumber() + " logged in");
 			} else {
 				message = "mismatch phone number or password!";
 			}
 		} catch (DAOException ex) {
-			// log
-			ex.printStackTrace();
+			log.error("error",ex);
 
 			message = ex.getMessage();
 		}
 
-		// context???
-		getServletContext().setAttribute("messageLogin", message);
+		// if log in was needed for access to some page
+		String redirectAttr = (String) request.getSession().getAttribute("redirect");
+		if (redirectAttr != null) {
+			redirect = redirectAttr;
+			request.getSession().removeAttribute("redirect");
+		}
 
+		log.debug("In LoginServlet for " + request.getContextPath() + request.getServletPath() +
+				" redirect to: " + request.getContextPath() + redirect);
+
+		request.getSession().setAttribute("messageLogin", message);
 		response.sendRedirect(redirect);
-		/*request.setAttribute("redirect",);
-		doGet(request, response);*/
 	}
 }

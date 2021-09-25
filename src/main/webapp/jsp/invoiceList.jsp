@@ -21,10 +21,10 @@
 
 <nav>
 	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="userPage">User page</a>
+	<a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a>
 	<a href="invoicePage">Create invoice</a>
 	<a href="receiptListPage">View receipts</a>
-	<a href="logout">Logout</a>
+	<a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
 <hr/>
 

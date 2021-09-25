@@ -3,6 +3,7 @@ package com.delivery.dao.mysql;
 
 import com.delivery.dao.UserDAO;
 import com.delivery.dao.mysql.queries.MySqlQueries;
+import com.delivery.entity.Role;
 import com.delivery.entity.User;
 
 import java.sql.*;
@@ -108,7 +109,7 @@ public class MySqlUserDAO implements UserDAO {
 			int k = 0;
 			st.setString(++k, user.getPhoneNumber());
 			st.setString(++k, user.getPassword());
-			st.setInt(++k, user.getRoleId());
+			st.setString(++k, Role.RoleName.USER.toString());
 			if (st.executeUpdate() > 0) {
 				rs = st.getGeneratedKeys();
 				if (rs.next()) {
@@ -130,7 +131,6 @@ public class MySqlUserDAO implements UserDAO {
 			st = connection.prepareStatement(MySqlQueries.UPDATE_USER);
 			int k = 0;
 			st.setString(++k, user.getPassword());
-			st.setInt(++k, user.getRoleId());
 			st.setLong(++k, user.getId());
 			st.executeUpdate();
 		} finally {

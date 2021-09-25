@@ -30,7 +30,6 @@ public class RegisterServlet extends HttpServlet {
 		String phoneNumber = request.getParameter("userNumber");
 		String password = request.getParameter("userPass");
 		String passwordConf = request.getParameter("userPassConf");
-		String role = request.getParameter("userRole");
 		String email = request.getParameter("userEmail");
 		String firstName = request.getParameter("userFirstName");
 		String lastName = request.getParameter("userLastName");
@@ -50,12 +49,12 @@ public class RegisterServlet extends HttpServlet {
 			} else {
 
 				user = UserManager.getInstance(DAOFactory.getDAOFactory())
-						.registerUser(phoneNumber, password, role, email, firstName, lastName);
+						.registerUser(phoneNumber, password, email, firstName, lastName);
 
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
 
-				redirect = "userPage";
+				redirect = "jsp/userPage.jsp";
 			}
 
 		} catch (DAOException ex) {
@@ -69,7 +68,6 @@ public class RegisterServlet extends HttpServlet {
 		getServletContext().setAttribute("messageRegister", message);
 		getServletContext().setAttribute("userNumber", phoneNumber);
 		getServletContext().setAttribute("userPass", password);
-		getServletContext().setAttribute("userRole", role);
 		getServletContext().setAttribute("userEmail", email);
 		getServletContext().setAttribute("userFirstName", firstName);
 		getServletContext().setAttribute("userLastName", lastName);

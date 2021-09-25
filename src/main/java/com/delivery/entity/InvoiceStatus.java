@@ -37,14 +37,14 @@ public class InvoiceStatus implements Serializable {
 			return status;
 		}
 
-		/*public static Status fromString(String text) {
+		public static Status fromString(String text) {
 			for (Status s : Status.values()) {
 				if (s.status.equalsIgnoreCase(text)) {
 					return s;
 				}
 			}
 			throw new IllegalArgumentException();
-		}*/
+		}
 	}
 
 	@Override

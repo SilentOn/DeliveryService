@@ -41,13 +41,13 @@ public class MySqlCargoDAO implements CargoDAO {
 	}
 
 	@Override
-	public Cargo getByType(Connection connection, String type) throws SQLException {
+	public Cargo getByType(Connection connection, Cargo.Type type) throws SQLException {
 		Cargo cargo = null;
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = connection.prepareStatement(MySqlQueries.SELECT_CARGO_BY_TYPE);
-			st.setString(1, type);
+			st.setString(1, type.toString());
 			rs = st.executeQuery();
 			if (rs.next()) {
 				cargo = parseResultSet(rs);
@@ -80,7 +80,7 @@ public class MySqlCargoDAO implements CargoDAO {
 	private Cargo parseResultSet(ResultSet rs) throws SQLException {
 		Cargo cargo = new Cargo();
 		cargo.setId(rs.getInt(1));
-		cargo.setType(rs.getString(2));
+		cargo.setType(Cargo.Type.fromString(rs.getString(2)));
 		return cargo;
 	}
 }

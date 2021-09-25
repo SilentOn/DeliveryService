@@ -2,12 +2,13 @@ package com.delivery.dao.mysql.queries;
 
 public class MySqlQueries {
 	// for user
-	public static final String INSERT_INTO_USER = "INSERT INTO user (`phone_number`, `password`, `role_id`) VALUES (?, ?, ?)";
+	public static final String INSERT_INTO_USER = "INSERT INTO user (`phone_number`, `password`, `role_id`) " +
+			"VALUES (?, ?, (select id from role where name=?))";
 	public static final String SELECT_ALL_USER = "select * from user";
 	public static final String SELECT_USER_BY_ID = "select * from user where id=?";
 	public static final String SELECT_USER_BY_PHONE_NUMBER = "select * from user where phone_number=?";
 	public static final String SELECT_USER_BY_PHONE_NUMBER_AND_PASSWORD = "select * from user where phone_number=? and password=?";
-	public static final String UPDATE_USER = "UPDATE user SET `password`=?, `role_id`=? WHERE `id` = ?";
+	public static final String UPDATE_USER = "UPDATE user SET `password`=? WHERE `id` = ?";
 	public static final String DELETE_USER = "DELETE FROM user WHERE `id` = ?";
 
 	// for role

@@ -22,17 +22,7 @@ public class InvoicePageServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		if (session == null) {
-			getServletContext().setAttribute("errorMessage", "you must be logged \"user\"");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
 		User user = (User) session.getAttribute("user");
-		if (user == null || user.getRoleId() == 2) {
-			getServletContext().setAttribute("errorMessage", "you must be logged \"user\"");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
 
 		List<Region> regions = null;
 		List<City> cities = null;
@@ -63,17 +53,7 @@ public class InvoicePageServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		if (session == null) {
-			getServletContext().setAttribute("errorMessage", "you must be logged \"user\"");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
 		User user = (User) session.getAttribute("user");
-		if (user == null || user.getRoleId() == 2) {
-			getServletContext().setAttribute("errorMessage", "you must be logged \"user\"");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
 
 		String regionFrom = request.getParameter("invoiceRegionFrom");
 		String cityFrom = request.getParameter("invoiceCityFrom");

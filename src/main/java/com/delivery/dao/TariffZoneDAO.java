@@ -9,7 +9,7 @@ import java.util.List;
 public interface TariffZoneDAO {
 	TariffZone getByPK(Connection connection, long id) throws SQLException;
 
-	TariffZone getByTariffZoneTitle(Connection connection, String tariffZoneTitle) throws SQLException;
+	TariffZone getByTariffZoneTitle(Connection connection, TariffZone.TariffZoneTitle tariffZoneTitle) throws SQLException;
 
 	List<TariffZone> getAll(Connection connection) throws SQLException;
 

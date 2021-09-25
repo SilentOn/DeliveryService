@@ -43,13 +43,13 @@ public class MySqlTariffZoneDAO implements TariffZoneDAO {
 	}
 
 	@Override
-	public TariffZone getByTariffZoneTitle(Connection connection, String tariffZoneTitle) throws SQLException {
+	public TariffZone getByTariffZoneTitle(Connection connection, TariffZone.TariffZoneTitle tariffZoneTitle) throws SQLException {
 		TariffZone tariffZone = null;
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = connection.prepareStatement(MySqlQueries.SELECT_TARIFF_ZONE_BY_TARIFF_ZONE_TITLE);
-			st.setString(1, tariffZoneTitle);
+			st.setString(1, tariffZoneTitle.toString());
 			rs = st.executeQuery();
 			if (rs.next()) {
 				tariffZone = parseResultSet(rs);
@@ -82,7 +82,8 @@ public class MySqlTariffZoneDAO implements TariffZoneDAO {
 	@Override
 	public TariffZone getByCityFromIdAndCityToId(Connection con, long cityFromId, long cityToId) throws SQLException {
 		if (cityFromId == cityToId) {
-			return DAOFactory.getDAOFactory().getTariffZoneDAO().getByTariffZoneTitle(con, "city");
+			return DAOFactory.getDAOFactory().getTariffZoneDAO()
+					.getByTariffZoneTitle(con, TariffZone.TariffZoneTitle.ZONE_CITY);
 		}
 
 		int regionFrom;
@@ -97,7 +98,8 @@ public class MySqlTariffZoneDAO implements TariffZoneDAO {
 		System.out.println("regionTo in getByCityFromIdAndCityToId ==> " + regionTo);
 
 		if (regionFrom == regionTo) {
-			return DAOFactory.getDAOFactory().getTariffZoneDAO().getByTariffZoneTitle(con, "region");
+			return DAOFactory.getDAOFactory().getTariffZoneDAO()
+					.getByTariffZoneTitle(con, TariffZone.TariffZoneTitle.ZONE_REGION);
 		}
 
 		regionHasRegion = DAOFactory.getDAOFactory().getRegionHasRegionDAO().getByPK(
@@ -113,7 +115,7 @@ public class MySqlTariffZoneDAO implements TariffZoneDAO {
 		TariffZone tariffZone = new TariffZone();
 		int k = 0;
 		tariffZone.setId(rs.getLong(++k));
-		tariffZone.setTariffZoneTitle(rs.getString(++k));
+		tariffZone.setTariffZoneTitle(TariffZone.TariffZoneTitle.fromString(rs.getString(++k)));
 		tariffZone.setTerm(rs.getInt(++k));
 		return tariffZone;
 	}

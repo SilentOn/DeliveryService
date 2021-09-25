@@ -94,10 +94,8 @@ public class UserManager {
 		}
 	}*/
 
-	public User registerUser(String phoneNumber, String password, String role,
+	public User registerUser(String phoneNumber, String password,
 	                         String email, String firstName, String lastName) throws DAOException {
-		int roleId;
-
 		User user = new User();
 		user.setPhoneNumber(phoneNumber);
 		user.setPassword(password);
@@ -110,9 +108,6 @@ public class UserManager {
 		Connection con = null;
 		try {
 			con = daoFactory.getConnection();
-
-			roleId = daoFactory.getRoleDAO().getByName(con, role).getId();
-			user.setRoleId(roleId);
 
 			// change to user with id
 			user = daoFactory.getUserDAO().insert(con, user);
@@ -293,12 +288,12 @@ public class UserManager {
 		return role;
 	}
 
-	public Role getRole(String name) throws DAOException {
+	public Role getRole(Role.RoleName roleName) throws DAOException {
 		Role role = null;
 		Connection con = null;
 		try {
 			con = daoFactory.getConnection();
-			role = daoFactory.getRoleDAO().getByName(con, name);
+			role = daoFactory.getRoleDAO().getByName(con, roleName);
 			con.commit();
 		} catch (SQLException e) {
 			// log

@@ -21,9 +21,9 @@
 
 <nav>
 	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="logout">Logout</a>
+	<a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a>
+	<a href="${pageContext.request.contextPath}/logout">Logout</a>
 	<%--<hr/>--%>
-	<a href="userPage">User page</a>
 	<a href="invoiceListPage">View invoices</a>
 	<c:if test="${sessionScope.user.roleId eq 1}">
 		<a href="invoicePage">Create invoice</a>

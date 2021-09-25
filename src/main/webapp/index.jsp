@@ -20,16 +20,16 @@
 <nav>
 	<c:choose>
 		<c:when test="${not empty sessionScope.user}">
-			<a href="userPage">User page</a>
-			<a href="logout">Logout</a>
+			<a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a>
+			<a href="${pageContext.request.contextPath}/logout">Logout</a>
 		</c:when>
 		<c:otherwise>
 			<a href="registerpage">Registration</a>
 			<a href="${pageContext.request.contextPath}/jsp/login.jsp">Login</a>
 			<%--<hr/>--%>
-			<a href="deliveryDirectionsList">Information about delivery directions</a>
+			<a href="${pageContext.request.contextPath}/deliveryDirectionsList">Information about delivery directions</a>
 			<a href="">Tariffs</a>
-			<a href="calculateCost">Calculate shipping cost</a>
+			<a href="${pageContext.request.contextPath}/calculateCost">Calculate shipping cost</a>
 		</c:otherwise>
 	</c:choose>
 </nav>

@@ -42,15 +42,6 @@
 	Number:<input type="text" name="userNumber" value="${userNumber}"<%--"+380 (95) 079-54-02"--%>/><br/><br/>
 	Password:<input type="password" name="userPass" value="${userPass}"<%--"userPass"--%>/><br/><br/>
 	Confirm password:<input type="password" name="userPassConf" <%--value="userPass"--%>/><br/><br/>
-	<%--Role:
-		<select class = "browser-default" name="userRole">
-			<c:forEach items="${requestScope.roles}" var="role">
-				<option ${role.name == userRole ? 'selected' : ''}>
-						${role.name}
-				</option>
-			</c:forEach>
-		</select>--%>
-	<input type="hidden" name="userRole" value="user">
 	<br/><br/>
 
 	Email:<input type="text" name="userEmail" value="${userEmail}"/><br/><br/>
@@ -59,7 +50,6 @@
 
 	${userNumber=""}
 	${userPass=""}
-	${userRole=""}
 	${userEmail=""}
 	${userFirstName=""}
 	${userLastName=""}

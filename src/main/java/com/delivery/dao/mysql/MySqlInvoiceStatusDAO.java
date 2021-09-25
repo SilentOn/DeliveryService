@@ -80,7 +80,7 @@ public class MySqlInvoiceStatusDAO implements InvoiceStatusDAO {
 	private InvoiceStatus parseResultSet(ResultSet rs) throws SQLException {
 		InvoiceStatus invoiceStatus = new InvoiceStatus();
 		invoiceStatus.setId(rs.getInt(1));
-		invoiceStatus.setName(InvoiceStatus.Status.valueOf(rs.getString(2).toUpperCase()));
+		invoiceStatus.setName(InvoiceStatus.Status.fromString(rs.getString(2)));
 		return invoiceStatus;
 	}
 }

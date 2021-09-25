@@ -41,13 +41,13 @@ public class MySqlRoleDAO implements RoleDAO {
 	}
 
 	@Override
-	public Role getByName(Connection connection, String name) throws SQLException {
+	public Role getByName(Connection connection, Role.RoleName name) throws SQLException {
 		Role role = null;
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = connection.prepareStatement(MySqlQueries.SELECT_ROLE_BY_NAME);
-			st.setString(1, name);
+			st.setString(1, name.toString());
 			rs = st.executeQuery();
 			if (rs.next()) {
 				role = parseResultSet(rs);
@@ -80,7 +80,7 @@ public class MySqlRoleDAO implements RoleDAO {
 	private Role parseResultSet(ResultSet rs) throws SQLException {
 		Role role = new Role();
 		role.setId(rs.getInt(1));
-		role.setName(rs.getString(2));
+		role.setName(Role.RoleName.fromString(rs.getString(2)));
 		return role;
 	}
 }
