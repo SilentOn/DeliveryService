@@ -7,7 +7,6 @@ import com.delivery.logic.UserManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +19,9 @@ public class LoginServlet extends HttpServlet {
 	private static final Logger log = LogManager.getLogger(LoginServlet.class);
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		log.trace("LoginServlet#doPost");
+		HttpSession session = request.getSession();
 
 		String redirect = "jsp/login.jsp";
 		String message = "";
@@ -37,29 +37,28 @@ public class LoginServlet extends HttpServlet {
 
 				// put user into session
 				User user = UserManager.getInstance(DAOFactory.getDAOFactory()).getByPhoneNumber(phoneNumber);
-				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
 				log.info("user " + user.getPhoneNumber() + " logged in");
 			} else {
 				message = "mismatch phone number or password!";
 			}
 		} catch (DAOException ex) {
-			log.error("error",ex);
-
+			log.error("can't login", ex);
 			message = ex.getMessage();
 		}
 
 		// if log in was needed for access to some page
-		String redirectAttr = (String) request.getSession().getAttribute("redirect");
+		String redirectAttr = (String) session.getAttribute("redirect");
+		session.removeAttribute("redirect");
 		if (redirectAttr != null) {
 			redirect = redirectAttr;
-			request.getSession().removeAttribute("redirect");
+			session.removeAttribute("redirect");
 		}
 
 		log.debug("In LoginServlet for " + request.getContextPath() + request.getServletPath() +
 				" redirect to: " + request.getContextPath() + redirect);
 
-		request.getSession().setAttribute("messageLogin", message);
+		session.setAttribute("messageLogin", message);
 		response.sendRedirect(redirect);
 	}
 }

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "LoggedRoleUserFilter", urlPatterns = {"/invoicePage", "/payReceipt"})
+@WebFilter(filterName = "LoggedRoleUserFilter", urlPatterns = {"/jsp/createInvoice.jsp", "/invoiceCreate", "/payReceipt"})
 public class LoggedRoleUserFilter implements Filter {
 	private static final Logger log = LogManager.getLogger(LoggedRoleUserFilter.class);
 

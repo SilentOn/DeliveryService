@@ -5,6 +5,7 @@
 <html>
 <head>
 	<title>Create Invoice</title>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/addCargo.js"></script>
 	<script src="${pageContext.request.contextPath}/js/selectOptions.js"></script>
@@ -29,14 +30,14 @@
 </nav>
 <hr/>
 
-<form action="invoicePage" method="post">
+<form action="${pageContext.request.contextPath}/invoiceCreate" method="post">
 
 	<br/>
 	<br/>
 	<br/>
 	<div class="from">
 		<label for="invoiceRegionFrom">Region from:</label>
-		<select class="browser-default" <%--class="regionFrom"--%> id="invoiceRegionFrom" name="invoiceRegionFrom"
+		<select class="browser-default" id="invoiceRegionFrom" name="invoiceRegionFrom"
 		        required>
 			<option hidden selected value=""></option>
 			<c:forEach items="${requestScope.regions}" var="region">

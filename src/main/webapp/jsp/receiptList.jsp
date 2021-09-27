@@ -22,11 +22,11 @@
 <nav>
 	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
 	<a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a>
-	<a href="${pageContext.request.contextPath}/logout">Logout</a>
+	<a href="logout">Logout</a>
 	<%--<hr/>--%>
 	<a href="invoiceListPage">View invoices</a>
 	<c:if test="${sessionScope.user.roleId eq 1}">
-		<a href="invoicePage">Create invoice</a>
+		<a href="${pageContext.request.contextPath}/jsp/createInvoice.jsp">Create invoice</a>
 	</c:if>
 </nav>
 <hr/>
@@ -59,7 +59,7 @@
 
 		<c:if test="${sessionScope.user.roleId eq 1}">
 			<c:if test="${receipt.receiptStatusId eq 2}">
-				<form action="payReceipt" method="post">
+				<form action="${pageContext.request.contextPath}/payReceipt" method="post">
 					<input type="hidden" value="${receipt.id}" name="receiptId"/>
 					<input type="submit" value="Pay a receipt"/>
 				</form>

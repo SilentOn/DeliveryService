@@ -20,16 +20,19 @@
 <body class="container">
 
 <nav>
-	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a>
-	<a href="${pageContext.request.contextPath}/logout">Logout</a>
+	<div class="nav-wrapper">
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a href="${pageContext.request.contextPath}/index.jsp">Homepage</a></li>
+			<li><a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a></li>
+			<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+		</ul>
+	</div>
 </nav>
-<hr/>
 
-<form action="editUser" method="post">
+<form action="${pageContext.request.contextPath}/editUser" method="post">
 
 	${messageEditUser}
-	${messageEditUser=""}
+	${messageEditUser=null}
 	<br/>
 	<br/>
 	<br/>

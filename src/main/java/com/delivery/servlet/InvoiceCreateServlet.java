@@ -3,7 +3,8 @@ package com.delivery.servlet;
 import com.delivery.dao.DAOException;
 import com.delivery.dao.DAOFactory;
 import com.delivery.entity.InvoiceHasCargo;
-import com.delivery.entity.Receipt;
+import com.delivery.entity.User;
+import com.delivery.filter.InvoiceCreateFilter;
 import com.delivery.logic.InvoiceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,16 +17,17 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "CalculateCostServlet", value = "/calculateCost")
-public class CalculateCostServlet extends HttpServlet {
-	private static final Logger log = LogManager.getLogger(CalculateCostServlet.class);
+@WebServlet(name = "InvoiceCreateServlet", value = "/invoiceCreate")
+public class InvoiceCreateServlet extends HttpServlet {
+	private static final Logger log = LogManager.getLogger(InvoiceCreateFilter.class);
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		log.trace("CalculateCostServlet#doPost");
+		log.trace("InvoiceCreateServlet#doPost");
 		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
 
-		Receipt receipt = null;
+		String redirect = "invoiceListPage";
 
 		String regionFrom = request.getParameter("invoiceRegionFrom");
 		String cityFrom = request.getParameter("invoiceCityFrom");
@@ -40,15 +42,14 @@ public class CalculateCostServlet extends HttpServlet {
 		session.removeAttribute("cargos");
 
 		try {
-			receipt = InvoiceManager.getInstance(DAOFactory.getDAOFactory())
-					.calculateReceipt(regionFrom, cityFrom, addressFrom, regionTo, cityTo, addressTo, estimate, cargos);
+			InvoiceManager.getInstance(DAOFactory.getDAOFactory())
+					.insertInvoice(user, regionFrom, cityFrom, addressFrom, regionTo, cityTo, addressTo, estimate, cargos);
 		} catch (DAOException ex) {
-			log.error("can not calculate the cost", ex);
+			log.error("Can't create invoice", ex);
+			session.setAttribute("errorMessage", "Can't create invoice");
+			redirect = "jsp/error.jsp";
 		}
 
-		if (receipt != null) {
-			request.getSession().setAttribute("cost", receipt.getToPay());
-		}
-		response.sendRedirect("jsp/calculateCost.jsp");
+		response.sendRedirect(redirect);
 	}
 }

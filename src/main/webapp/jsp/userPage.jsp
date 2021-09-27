@@ -1,11 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.delivery.entity.Role.RoleName"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8">
 	<title>User page</title>
 
 	<!--Import Google Icon Font-->
@@ -18,38 +16,43 @@
 	<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
 
 </head>
-<body class = "container">
+<body class="container">
 
 <nav>
-	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="${pageContext.request.contextPath}/logout">Logout</a>
-	<%--<hr/>--%>
-	<a href="${pageContext.request.contextPath}/invoiceListPage">View invoices</a>
-	<c:choose>
-		<c:when test="${role.name.toString() eq 'user'}">
-			<a href="${pageContext.request.contextPath}/invoicePage">Create invoice</a>
-			<a href="${pageContext.request.contextPath}/receiptListPage">View my receipts</a>
-		</c:when>
-		<c:otherwise>
-			<a href="${pageContext.request.contextPath}/receiptListPage">View receipts</a>
-		</c:otherwise>
-	</c:choose>
+	<div class="nav-wrapper">
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a href="${pageContext.request.contextPath}/index.jsp">Homepage</a></li>
+			<li><a href="${pageContext.request.contextPath}/invoiceListPage">View invoices</a></li>
+			<c:choose>
+				<c:when test="${requestScope.role.name.toString() eq 'user'}">
+					<li><a href="${pageContext.request.contextPath}/jsp/createInvoice.jsp">Create invoice</a></li>
+					<li><a href="${pageContext.request.contextPath}/receiptListPage">View my receipts</a></li>
+				</c:when>
+				<c:otherwise>
+					<li><a href="${pageContext.request.contextPath}/receiptListPage">View receipts</a></li>
+				</c:otherwise>
+			</c:choose>
+			<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+		</ul>
+	</div>
 </nav>
+
 <div>
 	<hr/>
 	<br/>
 	<br/>
 	<br/>
 	Number: ${sessionScope.user.phoneNumber}<br/><br/>
-	Role: ${role.name.toString()}<br/><br/>
-	Email: ${userDetails.email}<br/><br/>
-	First Name: ${userDetails.firstName}<br/><br/>
-	Last Name: ${userDetails.lastName}<br/><br/>
-	<c:out value="${RoleName.USER.toString()}">${RoleName.USER.toString()}</c:out>
+	Role: ${requestScope.role.name.toString()}<br/><br/>
+	Email: ${requestScope.userDetails.email}<br/><br/>
+	First Name: ${requestScope.userDetails.firstName}<br/><br/>
+	Last Name: ${requestScope.userDetails.lastName}<br/><br/>
 	<nav>
-		<a href="editUser.jsp">Edit account details</a>
-		<a href="deleteUser">Delete account</a>
+		<a href="${pageContext.request.contextPath}/jsp/editUser.jsp">Edit account details</a>
 	</nav>
+	<form action="${pageContext.request.contextPath}/deleteUser" method="post">
+		<input type="submit" value="Delete account"/>
+	</form>
 </div>
 </body>
 </html>

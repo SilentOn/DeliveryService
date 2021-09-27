@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
 	<title>Register</title>
 
 	<!--Import Google Icon Font-->
@@ -16,46 +15,59 @@
 	<!-- Compiled and minified JavaScript -->
 	<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
 
-
-	<script>
-        $(document).ready(function () {
-            $('select').material_select();
-        });
-	</script>
-
 </head>
 <body class="container">
 
 <nav>
-	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="${pageContext.request.contextPath}/jsp/login.jsp">Login</a>
+	<div class="nav-wrapper">
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a href="${pageContext.request.contextPath}/index.jsp">Homepage</a></li>
+			<li><a href="${pageContext.request.contextPath}/jsp/login.jsp">Login</a></li>
+		</ul>
+	</div>
 </nav>
-<hr/>
 
-<form action="register" method="post">
+<form action="${pageContext.request.contextPath}/register" method="post">
 
-	${messageRegister}
-	${messageRegister=""}
+	<h6>${sessionScope.messageRegister}</h6>
 	<br/>
 	<br/>
 	<br/>
-	Number:<input type="text" name="userNumber" value="${userNumber}"<%--"+380 (95) 079-54-02"--%>/><br/><br/>
-	Password:<input type="password" name="userPass" value="${userPass}"<%--"userPass"--%>/><br/><br/>
-	Confirm password:<input type="password" name="userPassConf" <%--value="userPass"--%>/><br/><br/>
+	<label for="userNumber">Number: </label>
+	<input type="text" id="userNumber" name="userNumber" value="${sessionScope.userNumber}"/>
 	<br/><br/>
 
-	Email:<input type="text" name="userEmail" value="${userEmail}"/><br/><br/>
-	First Name:<input type="text" name="userFirstName" value="${userFirstName}"/><br/><br/>
-	Last Name:<input type="text" name="userLastName" value="${userLastName}"/><br/><br/>
+	<label for="userPass">Password: </label>
+	<input type="password" id="userPass" name="userPass" value="${sessionScope.userPass}"/>
+	<br/><br/>
 
-	${userNumber=""}
-	${userPass=""}
-	${userEmail=""}
-	${userFirstName=""}
-	${userLastName=""}
+	<label for="userPassConf">Confirm password: </label>
+	<input type="password" id="userPassConf" name="userPassConf"/>
+	<br/><br/>
+	<br/><br/>
+
+	<label for="userEmail">Email: </label>
+	<input type="text" id="userEmail" name="userEmail" value="${sessionScope.userEmail}"/>
+	<br/><br/>
+
+	<label for="userFirstName">First Name: </label>
+	<input type="text" id="userFirstName" name="userFirstName" value="${sessionScope.userFirstName}"/>
+	<br/><br/>
+
+	<label for="userLastName">Last Name: </label>
+	<input type="text" id="userLastName" name="userLastName" value="${sessionScope.userLastName}"/>
+	<br/><br/>
+
+	${sessionScope.remove("messageRegister")}
+	${sessionScope.remove("userNumber")}
+	${sessionScope.remove("userPass")}
+	${sessionScope.remove("userEmail")}
+	${sessionScope.remove("userFirstName")}
+	${sessionScope.remove("userLastName")}
 
 	<br/><br/>
 	<input type="submit" value="register"/>
+	<br/><br/>
 </form>
 </body>
 </html>

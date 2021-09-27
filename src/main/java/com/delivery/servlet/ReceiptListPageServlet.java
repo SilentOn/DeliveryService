@@ -4,8 +4,12 @@ import com.delivery.dao.DAOException;
 import com.delivery.dao.DAOFactory;
 import com.delivery.entity.Receipt;
 import com.delivery.entity.ReceiptStatus;
+import com.delivery.entity.Role;
 import com.delivery.entity.User;
 import com.delivery.logic.InvoiceManager;
+import com.delivery.logic.UserManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,45 +22,36 @@ import java.util.List;
 
 @WebServlet(name = "ReceiptListPageServlet", value = "/receiptListPage")
 public class ReceiptListPageServlet extends HttpServlet {
+	private static final Logger log = LogManager.getLogger(ReceiptListPageServlet.class);
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			getServletContext().setAttribute("errorMessage", "you must be logged \"user\"");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
+		log.trace("ReceiptListPageServlet#doGet");
+		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		if (user == null) {
-			getServletContext().setAttribute("errorMessage", "you must be logged user");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
+
+		String forward = "/jsp/receiptList.jsp";
 
 		List<Receipt> receipts = null;
 		List<ReceiptStatus> receiptStatuses = null;
 
 		try {
-			if (user.getRoleId() == 1) {
+			Role role = UserManager.getInstance(DAOFactory.getDAOFactory()).getRole(user.getRoleId());
+
+			if (role.getName() == Role.RoleName.USER) {
 				receipts = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllReceipts(user);
 			} else {
 				receipts = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllReceipts();
 			}
 			receiptStatuses = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllReceiptStatuses();
 		} catch (DAOException ex) {
-			// log
-			System.err.println(ex.getMessage());
+			log.error("can not obtain receipts", ex);
+			session.setAttribute("errorMessage", "can not obtain receipts");
+			forward = "/jsp/error.jsp";
 		}
-
-		System.out.println("=====");
-		System.out.println("receipts == >" + receipts);
-		System.out.println("receiptStatuses == >" + receiptStatuses);
-		System.out.println("=====");
 
 		request.setAttribute("receipts", receipts);
 		request.setAttribute("receiptStatuses", receiptStatuses);
-
-		request.getRequestDispatcher("jsp/receiptList.jsp").forward(request, response);
+		request.getRequestDispatcher(forward).forward(request, response);
 	}
 }

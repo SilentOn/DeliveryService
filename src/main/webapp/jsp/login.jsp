@@ -19,9 +19,12 @@
 <body class="container">
 
 <nav>
-	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
+	<div class="nav-wrapper">
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a href="${pageContext.request.contextPath}/index.jsp">Homepage</a></li>
+		</ul>
+	</div>
 </nav>
-<hr/>
 
 <form action="${pageContext.request.contextPath}/login" method="post">
 

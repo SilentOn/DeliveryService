@@ -21,11 +21,10 @@
 
 <nav>
 	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="registerpage">Registration</a>
+	<a href="${pageContext.request.contextPath}/jsp/register.jsp">Registration</a>
 	<a href="${pageContext.request.contextPath}/jsp/login.jsp">Login</a>
-	<%--<hr/>--%>
 	<a href="">Tariffs</a>
-	<a href="calculateCost">Calculate shipping cost</a>
+	<a href="${pageContext.request.contextPath}/jsp/calculateCost.jsp">Calculate shipping cost</a>
 </nav>
 <hr/>
 
@@ -42,19 +41,19 @@
 	<input type="hidden" name="action" value="sort">
 	<input type="submit" value="region desc">
 </form>--%>
-<form action="deliveryDirectionsList">
+<form action="${pageContext.request.contextPath}/deliveryDirectionsList">
 	<input type="hidden" name="city" value="asc">
 	<input type="hidden" name="action" value="sort">
 	<input type="submit" value="city asc">
 </form>
-<form action="deliveryDirectionsList">
+<form action="${pageContext.request.contextPath}/deliveryDirectionsList">
 	<input type="hidden" name="city" value="desc">
 	<input type="hidden" name="action" value="sort">
 	<input type="submit" value="city desc">
 </form>
 
 <br/>
-<form action="deliveryDirectionsList">
+<form action="${pageContext.request.contextPath}/deliveryDirectionsList">
 	<label for="filter">Filter by region:</label>
 	<select class = "browser-default" id="filter" name="filter">
 		<option>all</option>

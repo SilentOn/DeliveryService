@@ -5,6 +5,9 @@ import com.delivery.dao.DAOFactory;
 import com.delivery.entity.*;
 import com.delivery.logic.InvoiceManager;
 import com.delivery.logic.RegionManager;
+import com.delivery.logic.UserManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,21 +20,15 @@ import java.util.List;
 
 @WebServlet(name = "InvoiceListPageServlet", value = "/invoiceListPage")
 public class InvoiceListPageServlet extends HttpServlet {
+	private static final Logger log = LogManager.getLogger(InvoiceListPageServlet.class);
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			getServletContext().setAttribute("errorMessage", "you must be logged \"user\"");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
+		log.trace("InvoiceListPageServlet#doGet");
+		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		if (user == null) {
-			getServletContext().setAttribute("errorMessage", "you must be logged user");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
+
+		String forward = "/jsp/invoiceList.jsp";
 
 		List<Invoice> invoices = null;
 		List<City> cities = null;
@@ -39,7 +36,9 @@ public class InvoiceListPageServlet extends HttpServlet {
 		List<Address> addresses = null;
 
 		try {
-			if (user.getRoleId() == 1) {
+			Role role = UserManager.getInstance(DAOFactory.getDAOFactory()).getRole(user.getRoleId());
+
+			if (role.getName() == Role.RoleName.USER) {
 				invoices = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllInvoiceByUser(user);
 			} else {
 				invoices = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAll();
@@ -48,37 +47,15 @@ public class InvoiceListPageServlet extends HttpServlet {
 			invoiceStatuses = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllInvoiceStatuses();
 			addresses = RegionManager.getInstance(DAOFactory.getDAOFactory()).getAllAddresses();
 		} catch (DAOException ex) {
-			// log
-			System.err.println(ex.getMessage());
+			log.error("can not obtain invoices", ex);
+			session.setAttribute("errorMessage", "can not obtain invoices");
+			forward = "/jsp/error.jsp";
 		}
-
-		System.out.println("=====");
-		System.out.println("invoices == >" + invoices);
-		System.out.println("cities == >" + cities);
-		System.out.println("invoiceStatuses == >" + invoiceStatuses);
-		System.out.println("addresses == >" + addresses);
-		System.out.println("=====");
 
 		request.setAttribute("invoices", invoices);
 		request.setAttribute("cities", cities);
 		request.setAttribute("invoiceStatuses", invoiceStatuses);
 		request.setAttribute("addresses", addresses);
-
-		request.getRequestDispatcher("jsp/invoiceList.jsp").forward(request, response);
+		request.getRequestDispatcher(forward).forward(request, response);
 	}
-
-	/*@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
-
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			getServletContext().setAttribute("errorMessage", "you must be logged \"user\"");
-			response.sendRedirect("jsp/error.jsp");
-			return;
-		}
-
-
-	}*/
 }

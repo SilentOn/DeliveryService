@@ -25,7 +25,7 @@
 
 <nav>
 	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="registerpage">Registration</a>
+	<a href="${pageContext.request.contextPath}/jsp/register.jsp">Registration</a>
 	<a href="${pageContext.request.contextPath}/jsp/login.jsp">Login</a>
 	<%--<hr/>--%>
 	<a href="deliveryDirectionsList">Information about delivery directions</a>
@@ -33,7 +33,7 @@
 </nav>
 <hr/>
 
-<form action="calculateCost" method="post">
+<form action="${pageContext.request.contextPath}/calculateCost" method="post">
 
 
 	<c:if test="${sessionScope.cost != null and sessionScope.cost != ''}">

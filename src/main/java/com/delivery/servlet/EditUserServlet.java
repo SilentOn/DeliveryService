@@ -8,7 +8,6 @@ import com.delivery.logic.UserManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,18 +20,17 @@ public class EditUserServlet extends HttpServlet {
 	private static final Logger log = LogManager.getLogger(EditUserServlet.class);
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String redirect = "editUser.jsp";
-		String message = "success!";
-
-		HttpSession session = request.getSession(false);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		log.trace("EditUserServlet#doPost");
+		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
+
+		String redirect = "jsp/userPage.jsp";
 
 		User editUser;
 		UserDetails editUserDetails;
 
 		String password = request.getParameter("userPass");
-		String passwordConf = request.getParameter("userPassConf");
 		String email = request.getParameter("userEmail");
 		String firstName = request.getParameter("userFirstName");
 		String lastName = request.getParameter("userLastName");
@@ -49,36 +47,18 @@ public class EditUserServlet extends HttpServlet {
 		editUserDetails.setLastName(lastName);
 
 		try {
-			UserDetails userDetails = UserManager.getInstance(DAOFactory.getDAOFactory())
-					.getUserDetailsByEmail(email);
-			if (!password.equals(passwordConf)) {
-				message = "the passwords entered do not match";
-			} else if (userDetails != null && userDetails.getId() != user.getId()) {
-				// if in DB already present user with this email and it's not this user
-				message = "email already registered";
-			} else {
-				UserManager.getInstance(DAOFactory.getDAOFactory())
-						.editUser(editUser, editUserDetails);
+			UserManager.getInstance(DAOFactory.getDAOFactory())
+					.editUser(editUser, editUserDetails);
 
-				session.setAttribute("user", editUser);
-				redirect = "userPage.jsp";
-			}
+			// change user in session to editedUser
+			session.setAttribute("user", editUser);
 		} catch (DAOException ex) {
-			// log
-			ex.printStackTrace();
-
-			message = ex.getMessage();
+			log.error("Can't edit user", ex);
+			session.setAttribute("errorMessage", "Can't edit user");
+			redirect = "jsp/error.jsp";
 		}
 
-
-		System.out.println("===");
-		System.out.println("editUserDetails " + editUserDetails);
-		System.out.println("message " + message);
-		System.out.println("redirect " + redirect);
-		System.out.println("===");
-		getServletContext().setAttribute("userDetails", editUserDetails);
-		getServletContext().setAttribute("messageEditUser", message);
-
+		log.debug("In EditUserServlet#doPost redirect to: " + request.getContextPath() + redirect);
 		response.sendRedirect(redirect);
 	}
 }

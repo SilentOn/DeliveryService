@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter(filterName = "LoggedFilter",
-		urlPatterns = {"/jsp/userPage.jsp", "/jsp/editUser.jsp", "/invoiceListPage", "/deleteUser", "/receiptListPage"})
+		urlPatterns = {"/jsp/userPage.jsp", "/jsp/editUser.jsp", "/deleteUser", "/invoiceListPage", "/receiptListPage"})
 public class LoggedFilter implements Filter {
 	private static final Logger log = LogManager.getLogger(LoggedFilter.class);
 

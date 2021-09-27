@@ -23,7 +23,6 @@ public class UserDetailsFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
 		log.trace("UserDetailsFilter#doFilter");
 
-
 		HttpSession session = ((HttpServletRequest) request).getSession(false);
 		User user = (User) session.getAttribute("user");
 
@@ -50,11 +49,8 @@ public class UserDetailsFilter implements Filter {
 
 			log.debug("role ==> " + role);
 		} catch (DAOException ex) {
-			log.error("can not obtain role!");
+			log.error("can not obtain role", ex);
 		}
-
-		log.debug("userDetails ==> " + userDetails);
-		log.debug("role ==> " + role);
 
 		request.setAttribute("userDetails", userDetails);
 		request.setAttribute("role", role);

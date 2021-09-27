@@ -553,18 +553,22 @@ public class InvoiceManager {
 		return receipts;
 	}
 
-	public Receipt payReceipt(User user, long receiptId) throws DAOException {
+	public Receipt payReceipt(long receiptId) throws DAOException {
 		Receipt receipt = null;
+		Invoice invoice = null;
 
 		Connection con = null;
 		try {
 			con = daoFactory.getConnection();
 
 			receipt = daoFactory.getReceiptDAO().getByPK(con, receiptId);
+			invoice = daoFactory.getInvoiceDAO().getByPK(con, receiptId);
 
 			receipt.setReceiptStatusId(daoFactory.getReceiptStatusDAO().getByName(con, ReceiptStatus.Status.PAID).getId());
+			invoice.setInvoiceStatusId(daoFactory.getInvoiceStatusDAO().getByName(con, InvoiceStatus.Status.PAID).getId());
 
 			daoFactory.getReceiptDAO().update(con, receipt);
+			daoFactory.getInvoiceDAO().update(con, invoice);
 
 			con.commit();
 		} catch (SQLException ex) {
