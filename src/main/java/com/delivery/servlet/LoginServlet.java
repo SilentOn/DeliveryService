@@ -2,6 +2,7 @@ package com.delivery.servlet;
 
 import com.delivery.dao.DAOException;
 import com.delivery.dao.DAOFactory;
+import com.delivery.entity.Role;
 import com.delivery.entity.User;
 import com.delivery.logic.UserManager;
 import org.apache.logging.log4j.LogManager;
@@ -35,9 +36,13 @@ public class LoginServlet extends HttpServlet {
 			if (valid) {
 				redirect = "jsp/userPage.jsp";
 
-				// put user into session
 				User user = UserManager.getInstance(DAOFactory.getDAOFactory()).getByPhoneNumber(phoneNumber);
+				Role role = UserManager.getInstance(DAOFactory.getDAOFactory()).getRole(user.getRoleId());
+				boolean isManager = role != null && role.getName() == Role.RoleName.MANAGER;
+
+				// put user and isManager into session
 				session.setAttribute("user", user);
+				session.setAttribute("isManager", isManager);
 				log.info("user " + user.getPhoneNumber() + " logged in");
 			} else {
 				message = "mismatch phone number or password!";

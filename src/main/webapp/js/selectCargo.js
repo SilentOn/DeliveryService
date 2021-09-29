@@ -9,7 +9,17 @@ function selectCargoType(cargo, nItem) {
     var widthLabel = document.getElementById("width" + nItem + "Label");
     var heightLabel = document.getElementById("height" + nItem + "Label");
 
+
+    console.log(weight);
+    console.log(length);
+    console.log(width);
+    console.log(height);
+    console.log(lengthLabel);
+    console.log(widthLabel);
+    console.log(heightLabel);
+
     if (selType === "2") {
+        weight.setAttribute("step", "0.05");
         weight.setAttribute("min", "0.05");
         length.setAttribute("value", "40");
         width.setAttribute("value", "10");
@@ -24,6 +34,7 @@ function selectCargoType(cargo, nItem) {
         widthLabel.hidden = true;
         heightLabel.hidden = true;
     } else {
+        weight.setAttribute("step", "any");
         weight.setAttribute("min", "1");
         length.setAttribute("value", "0");
         width.setAttribute("value", "0");

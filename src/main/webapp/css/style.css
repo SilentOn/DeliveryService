@@ -1,0 +1,24 @@
+nav{
+    background: lightslategrey;
+}
+
+.input-field {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.btn{
+    background-color: lightslategrey;
+}
+
+label{
+    font-size: medium;
+}
+
+.row {
+    margin: 10px;
+}
+
+.card-panel.col{
+    padding: 20px;
+}

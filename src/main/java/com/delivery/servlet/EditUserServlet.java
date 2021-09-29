@@ -35,10 +35,13 @@ public class EditUserServlet extends HttpServlet {
 		String firstName = request.getParameter("userFirstName");
 		String lastName = request.getParameter("userLastName");
 
+		log.debug("userFirstName: " + firstName);
+		log.debug("userLastName: " + lastName);
 		editUser = new User();
 		editUser.setId(user.getId());
 		editUser.setPhoneNumber(user.getPhoneNumber());
 		editUser.setPassword(password);
+		editUser.setRoleId(user.getRoleId());
 
 		editUserDetails = new UserDetails();
 		editUserDetails.setId(user.getId());

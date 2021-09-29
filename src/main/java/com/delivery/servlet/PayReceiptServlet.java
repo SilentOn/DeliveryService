@@ -2,7 +2,6 @@ package com.delivery.servlet;
 
 import com.delivery.dao.DAOException;
 import com.delivery.dao.DAOFactory;
-import com.delivery.entity.User;
 import com.delivery.logic.InvoiceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,6 @@ public class PayReceiptServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		log.trace("PayReceiptServlet#doPost");
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
 
 		String redirect = "receiptListPage";
 

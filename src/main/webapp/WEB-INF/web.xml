@@ -3,4 +3,112 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.delivery.filter.EncodingFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>LoggedFilter</filter-name>
+        <filter-class>com.delivery.filter.LoggedFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>LoggedRoleManagerFilter</filter-name>
+        <filter-class>com.delivery.filter.LoggedRoleManagerFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>LoggedRoleUserFilter</filter-name>
+        <filter-class>com.delivery.filter.LoggedRoleUserFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>RegisterFilter</filter-name>
+        <filter-class>com.delivery.filter.RegisterFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>UserDetailsFilter</filter-name>
+        <filter-class>com.delivery.filter.UserDetailsFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>EditUserFilter</filter-name>
+        <filter-class>com.delivery.filter.EditUserFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>InvoicePageFilter</filter-name>
+        <filter-class>com.delivery.filter.InvoicePageFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>InvoiceCreateFilter</filter-name>
+        <filter-class>com.delivery.filter.InvoiceCreateFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>LoggedFilter</filter-name>
+
+        <url-pattern>/jsp/userPage.jsp</url-pattern>
+        <url-pattern>/jsp/editUser.jsp</url-pattern>
+        <url-pattern>/deleteUser</url-pattern>
+        <url-pattern>/invoiceListPage</url-pattern>
+        <url-pattern>/receiptListPage</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>LoggedRoleManagerFilter</filter-name>
+
+        <url-pattern>/receiptCreate</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>LoggedRoleUserFilter</filter-name>
+
+        <url-pattern>/jsp/createInvoice.jsp</url-pattern>
+        <url-pattern>/invoiceCreate</url-pattern>
+        <url-pattern>/payReceipt</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>RegisterFilter</filter-name>
+
+        <url-pattern>/register</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>UserDetailsFilter</filter-name>
+
+        <url-pattern>/jsp/userPage.jsp</url-pattern>
+        <url-pattern>/jsp/editUser.jsp</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>EditUserFilter</filter-name>
+
+        <url-pattern>/editUser</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>InvoicePageFilter</filter-name>
+
+        <url-pattern>/jsp/createInvoice.jsp</url-pattern>
+        <url-pattern>/jsp/calculateCost.jsp</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>InvoiceCreateFilter</filter-name>
+
+        <url-pattern>/invoiceCreate</url-pattern>
+        <url-pattern>/calculateCost</url-pattern>
+    </filter-mapping>
+
 </web-app>

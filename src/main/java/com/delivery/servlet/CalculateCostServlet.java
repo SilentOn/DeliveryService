@@ -44,6 +44,7 @@ public class CalculateCostServlet extends HttpServlet {
 					.calculateReceipt(regionFrom, cityFrom, addressFrom, regionTo, cityTo, addressTo, estimate, cargos);
 		} catch (DAOException ex) {
 			log.error("can not calculate the cost", ex);
+			request.getSession().setAttribute("cost", ex);
 		}
 
 		if (receipt != null) {

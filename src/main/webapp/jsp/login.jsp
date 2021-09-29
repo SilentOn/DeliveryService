@@ -1,46 +1,39 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Login</title>
 
-	<!--Import Google Icon Font-->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-	<!-- Compiled and minified CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
-	<!-- Compiled and minified JavaScript -->
-	<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
-
+	<%@include file="/jsp/connectHeader.jsp" %>
 </head>
-<body class="container">
+<body>
+<%@include file="/jsp/navNotLogged.jsp" %>
 
-<nav>
-	<div class="nav-wrapper">
-		<ul id="nav-mobile" class="right hide-on-med-and-down">
-			<li><a href="${pageContext.request.contextPath}/index.jsp">Homepage</a></li>
-		</ul>
+<div class="container">
+	<div class="row">
+		<div class="card-panel col l4 offset-l4">
+			<form action="${pageContext.request.contextPath}/login" method="post">
+				<h6>${sessionScope.messageLogin}</h6>
+				${sessionScope.remove("messageLogin")}
+
+				<div class="input-field">
+					<i class="material-icons prefix">phone</i>
+					<input id="userNumber" type="tel" name="userNumber" class="validate" required>
+					<label for="userNumber">Number</label>
+				</div>
+
+				<div class="input-field">
+					<i class="material-icons prefix">lock</i>
+					<input type="password" id="userPass" name="userPass" class="validate" required>
+					<label for="userPass">Password</label>
+				</div>
+
+				<input class="waves-effect waves-light btn" type="submit" value="Login"/>
+			</form>
+		</div>
 	</div>
-</nav>
-
-<form action="${pageContext.request.contextPath}/login" method="post">
-
-	<h6>${messageLogin}</h6>
-	${messageLogin=null}
-
-	<br/>
-	<br/>
-	<br/>
-	<label for="userNumber">Number: </label>
-	<input type="text" id="userNumber" name="userNumber"/><br/><br/>
-	<label for="userPass">Password: </label>
-	<input type="password" id="userPass" name="userPass"/><br/><br/>
-
-	<br/><br/>
-	<input type="submit" value="Login"/>
-</form>
+</div>
 </body>
 </html>

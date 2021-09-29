@@ -10,13 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
-@WebFilter(filterName = "InvoicePageFilter",
-		urlPatterns = {"/jsp/createInvoice.jsp", "/jsp/calculateCost.jsp"})
 public class InvoicePageFilter implements Filter {
 	private static final Logger log = LogManager.getLogger(InvoicePageFilter.class);
 
@@ -39,10 +36,6 @@ public class InvoicePageFilter implements Filter {
 			request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
 			return;
 		}
-
-		log.debug("regions ==> {}", regions);
-		log.debug("cities ==> {}", cities);
-		log.debug("addresses ==> {}", addresses);
 
 		request.setAttribute("regions", regions);
 		request.setAttribute("cities", cities);

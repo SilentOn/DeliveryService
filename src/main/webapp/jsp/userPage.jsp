@@ -1,58 +1,102 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
 <head>
 	<title>User page</title>
 
-	<!--Import Google Icon Font-->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-	<!-- Compiled and minified CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
-	<!-- Compiled and minified JavaScript -->
-	<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
-
+	<%@include file="/jsp/connectHeader.jsp" %>
 </head>
-<body class="container">
+<body>
+<%@include file="/jsp/navLogged.jsp" %>
 
-<nav>
-	<div class="nav-wrapper">
-		<ul id="nav-mobile" class="right hide-on-med-and-down">
-			<li><a href="${pageContext.request.contextPath}/index.jsp">Homepage</a></li>
-			<li><a href="${pageContext.request.contextPath}/invoiceListPage">View invoices</a></li>
-			<c:choose>
-				<c:when test="${requestScope.role.name.toString() eq 'user'}">
-					<li><a href="${pageContext.request.contextPath}/jsp/createInvoice.jsp">Create invoice</a></li>
-					<li><a href="${pageContext.request.contextPath}/receiptListPage">View my receipts</a></li>
-				</c:when>
-				<c:otherwise>
-					<li><a href="${pageContext.request.contextPath}/receiptListPage">View receipts</a></li>
-				</c:otherwise>
-			</c:choose>
-			<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+<div class="container">
+	<div class="row card-panel">
+		<ul>
+			<li>
+				<div class="row">
+					<i class="material-icons tiny">phone</i>
+					<label>Number</label>
+					<p>${sessionScope.user.phoneNumber}</p>
+				</div>
+			</li>
+
+			<li>
+				<div class="row">
+					<i class="material-icons tiny">assignment_ind</i>
+					<label>Role</label>
+					<p>${requestScope.role.name.toString()}</p>
+				</div>
+			</li>
+
+			<li>
+				<div class="row">
+					<i class="material-icons tiny">email</i>
+					<label>Email</label>
+					<p>${requestScope.userDetails.email}</p>
+				</div>
+			</li>
+
+			<li>
+				<div class="row">
+					<i class="material-icons tiny">account_circle</i>
+					<label>First name</label>
+					<p>${requestScope.userDetails.firstName}</p>
+				</div>
+			</li>
+
+			<li>
+				<div class="row">
+					<i class="material-icons tiny">account_box</i>
+					<label>Last name</label>
+					<p>${requestScope.userDetails.lastName}</p>
+				</div>
+			</li>
 		</ul>
-	</div>
-</nav>
+		<%--<hr>
+		<div class="input-field">
+			<i class="material-icons prefix">phone</i>
+			<input id="userPhoneNumber" type="tel" readonly value="${sessionScope.user.phoneNumber}">
+			<label for="userPhoneNumber">Number</label>
+		</div>
 
-<div>
-	<hr/>
-	<br/>
-	<br/>
-	<br/>
-	Number: ${sessionScope.user.phoneNumber}<br/><br/>
-	Role: ${requestScope.role.name.toString()}<br/><br/>
-	Email: ${requestScope.userDetails.email}<br/><br/>
-	First Name: ${requestScope.userDetails.firstName}<br/><br/>
-	Last Name: ${requestScope.userDetails.lastName}<br/><br/>
-	<nav>
-		<a href="${pageContext.request.contextPath}/jsp/editUser.jsp">Edit account details</a>
-	</nav>
-	<form action="${pageContext.request.contextPath}/deleteUser" method="post">
-		<input type="submit" value="Delete account"/>
-	</form>
+		<div class="input-field">
+			<i class="material-icons prefix">assignment_ind</i>
+			<input id="userRole" type="text" readonly value="${requestScope.role.name.toString()}">
+			<label for="userRole">Role</label>
+		</div>
+
+		<div class="input-field">
+			<i class="material-icons prefix">email</i>
+			<input id="userEmail" type="text" readonly value="${requestScope.userDetails.email}">
+			<label for="userEmail">Email</label>
+		</div>
+
+		<div class="input-field">
+			<i class="material-icons prefix">account_circle</i>
+			<input id="userFirstName" type="text" readonly value="${requestScope.userDetails.firstName}">
+			<label for="userFirstName">First name</label>
+		</div>
+
+		<div class="input-field">
+			<i class="material-icons prefix">account_box</i>
+			<input id="userLastName" type="text" readonly value="${requestScope.userDetails.lastName}">
+			<label for="userLastName">Last name</label>
+		</div>--%>
+
+		<a class="waves-effect waves-light btn" href="${pageContext.request.contextPath}/jsp/editUser.jsp">
+			Edit account details
+		</a>
+		<br>
+		<br>
+		<form action="${pageContext.request.contextPath}/deleteUser" method="post">
+			<input onclick="return confirm('Are you sure you want to delete yourself?')"
+			       class="waves-effect waves-light btn"
+			       type="submit"
+			       value="Delete account"/>
+		</form>
+	</div>
 </div>
 </body>
 </html>

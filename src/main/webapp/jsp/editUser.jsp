@@ -1,53 +1,65 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8">
 	<title>Edit user</title>
 
-	<!--Import Google Icon Font-->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-	<!-- Compiled and minified CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
-	<!-- Compiled and minified JavaScript -->
-	<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
-
+	<%@include file="/jsp/connectHeader.jsp" %>
 </head>
-<body class="container">
+<body>
+<%@include file="/jsp/navLogged.jsp" %>
 
-<nav>
-	<div class="nav-wrapper">
-		<ul id="nav-mobile" class="right hide-on-med-and-down">
-			<li><a href="${pageContext.request.contextPath}/index.jsp">Homepage</a></li>
-			<li><a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a></li>
-			<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
-		</ul>
-	</div>
-</nav>
+<div class="container">
+	<form action="${pageContext.request.contextPath}/editUser" method="post">
+		<div class="row card-panel">
+			<h6>${sessionScope.messageEditUser}</h6>
+			${sessionScope.remove("messageEditUser")}
+			<div class="input-field">
+				<i class="material-icons prefix">phone</i>
+				<input id="userPhoneNumber" type="tel" readonly disabled value="${sessionScope.user.phoneNumber}">
+				<label for="userPhoneNumber">Number</label>
+			</div>
 
-<form action="${pageContext.request.contextPath}/editUser" method="post">
+			<div class="input-field">
+				<i class="material-icons prefix">assignment_ind</i>
+				<input id="userRole" type="text" readonly disabled value="${requestScope.role.name.toString()}">
+				<label for="userRole">Role</label>
+			</div>
 
-	${messageEditUser}
-	${messageEditUser=null}
-	<br/>
-	<br/>
-	<br/>
-	Number: ${sessionScope.user.phoneNumber}<br/><br/>
-	Role: ${role.name.toString()}<br/><br/>
-	Password:<input type="password" name="userPass" value="${sessionScope.user.password}"/><br/><br/>
-	Confirm password:<input type="password" name="userPassConf"/><br/><br/>
-	<br/><br/>
+			<div class="input-field">
+				<i class="material-icons prefix">lock</i>
+				<input type="password" id="userPass" name="userPass" class="validate" value="${sessionScope.user.password}">
+				<label for="userPass">Password</label>
+			</div>
 
-	Email:<input type="text" name="userEmail" value="${userDetails.email}"/><br/><br/>
-	First Name:<input type="text" name="userFirstName" value="${userDetails.firstName}"/><br/><br/>
-	Last Name:<input type="text" name="userLastName" value="${userDetails.lastName}"/><br/><br/>
+			<div class="input-field">
+				<i class="material-icons prefix">lock</i>
+				<input type="password" id="userPassConf" name="userPassConf" class="validate">
+				<label for="userPassConf">Confirm password</label>
+			</div>
 
-	<br/><br/>
-	<input type="submit" value="Edit"/>
-</form>
+			<div class="input-field">
+				<i class="material-icons prefix">email</i>
+				<input type="text" id="userEmail" name="userEmail" class="validate" value="${requestScope.userDetails.email}">
+				<label for="userEmail">Email</label>
+			</div>
+
+			<div class="input-field">
+				<i class="material-icons prefix">account_circle</i>
+				<input type="text" id="userFirstName" name="userFirstName" class="validate" value="${requestScope.userDetails.firstName}">
+				<label for="userFirstName">First name</label>
+			</div>
+
+			<div class="input-field">
+				<i class="material-icons prefix">account_box</i>
+				<input type="text" id="userLastName" name="userLastName" class="validate" value="${requestScope.userDetails.lastName}">
+				<label for="userLastName">Last name</label>
+			</div>
+			<input class="waves-effect waves-light btn" type="submit" value="Edit"/>
+		</div>
+	</form>
+</div>
 </body>
 </html>

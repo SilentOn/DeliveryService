@@ -9,13 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "EditUserFilter", urlPatterns = {"/editUser"})
 public class EditUserFilter implements Filter {
 	private static final Logger log = LogManager.getLogger(EditUserFilter.class);
 
@@ -54,7 +52,7 @@ public class EditUserFilter implements Filter {
 			message = ex.getMessage();
 		}
 
-		session.setAttribute("messageRegister", message);
+		session.setAttribute("messageEditUser", message);
 		session.setAttribute("userNumber", phoneNumber);
 		session.setAttribute("userPass", password);
 		session.setAttribute("userEmail", email);

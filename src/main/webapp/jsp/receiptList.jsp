@@ -1,73 +1,54 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8">
 	<title>List of receipts</title>
 
-	<!--Import Google Icon Font-->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-	<!-- Compiled and minified CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
-	<!-- Compiled and minified JavaScript -->
-	<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>--%>
-
+	<%@include file="/jsp/connectHeader.jsp" %>
 </head>
-<body class = "container">
+<body>
+<%@include file="/jsp/navLogged.jsp" %>
 
-<nav>
-	<a href="${pageContext.request.contextPath}/index.jsp">Homepage</a>
-	<a href="${pageContext.request.contextPath}/jsp/userPage.jsp">User page</a>
-	<a href="logout">Logout</a>
-	<%--<hr/>--%>
-	<a href="invoiceListPage">View invoices</a>
-	<c:if test="${sessionScope.user.roleId eq 1}">
-		<a href="${pageContext.request.contextPath}/jsp/createInvoice.jsp">Create invoice</a>
-	</c:if>
-</nav>
-<hr/>
+<div class="container"><br/>
+	<br/>
+	<br/>
+	<div>
+		<c:forEach items="${requestScope.receipts}" var="receipt">
+			<div class="row card-panel">
+				<label for="invoiceId${receipt.id}">Invoice id: </label>
+				<div id="invoiceId${receipt.id}">
+						${receipt.id}
+				</div>
+				<br/>
+				<label for="toPay${receipt.id}">To pay: </label>
+				<div id="toPay${receipt.id}">
+						${receipt.toPay}
+				</div>
+				<br/>
+				<label for="status${receipt.id}">Status: </label>
+				<div id="status${receipt.id}">
+					<c:forEach items="${requestScope.receiptStatuses}" var="status">
+						<c:if test="${status.id eq receipt.receiptStatusId}">
+							${status.name.toString()}
+						</c:if>
+					</c:forEach>
+				</div>
 
-<br/>
-<br/>
-<br/>
-<div>
-	<c:forEach items="${requestScope.receipts}" var="receipt">
-		<div>
-			<label for="invoiceId${receipt.id}">Invoice id: </label>
-			<div id="invoiceId${receipt.id}">
-				${receipt.id}
-			</div>
-			<br/>
-			<label for="toPay${receipt.id}">To pay: </label>
-			<div id="toPay${receipt.id}">
-					${receipt.toPay}
-			</div>
-			<br/>
-			<label for="status${receipt.id}">Status: </label>
-			<div id="status${receipt.id}">
-				<c:forEach items="${requestScope.receiptStatuses}" var="status">
-					<c:if test="${status.id eq receipt.receiptStatusId}">
-						${status.name.toString()}
+				<c:if test="${sessionScope.user.roleId eq 1}">
+					<c:if test="${receipt.receiptStatusId eq 2}">
+						<form action="${pageContext.request.contextPath}/payReceipt" method="post">
+							<input type="hidden" value="${receipt.id}" name="receiptId"/>
+							<input type="submit" value="Pay a receipt"/>
+						</form>
 					</c:if>
-				</c:forEach>
+				</c:if>
 			</div>
-		</div>
-
-		<c:if test="${sessionScope.user.roleId eq 1}">
-			<c:if test="${receipt.receiptStatusId eq 2}">
-				<form action="${pageContext.request.contextPath}/payReceipt" method="post">
-					<input type="hidden" value="${receipt.id}" name="receiptId"/>
-					<input type="submit" value="Pay a receipt"/>
-				</form>
-			</c:if>
-		</c:if>
-		<hr/>
-		<br/><br/>
-	</c:forEach>
+			<hr/>
+			<br/><br/>
+		</c:forEach>
+	</div>
 </div>
 </body>
 </html>

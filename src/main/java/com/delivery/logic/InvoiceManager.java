@@ -450,7 +450,7 @@ public class InvoiceManager {
 
 		receipt.setId(invoice.getId());
 		receipt.setReceiptStatusId(daoFactory.getReceiptStatusDAO().getByName(con, ReceiptStatus.Status.NOT_PAID).getId());
-		receipt.setToPay(toPay);
+		receipt.setToPay(Math.round(toPay*100d)/100d);
 
 		System.out.println("receipt ==> " + receipt);
 		System.out.println("tariffZone ==> " + tariffZone);

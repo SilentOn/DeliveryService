@@ -10,12 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "UserDetailsFilter", urlPatterns = {"/jsp/userPage.jsp", "/jsp/editUser.jsp"})
 public class UserDetailsFilter implements Filter {
 	private static final Logger log = LogManager.getLogger(UserDetailsFilter.class);
 
