@@ -1,4 +1,4 @@
-nav{
+nav {
     background: lightslategrey;
 }
 
@@ -7,11 +7,11 @@ nav{
     margin-bottom: 20px;
 }
 
-.btn{
+.btn {
     background-color: lightslategrey;
 }
 
-label{
+label {
     font-size: medium;
 }
 
@@ -19,6 +19,38 @@ label{
     margin: 10px;
 }
 
-.card-panel.col{
+.card-panel.col {
     padding: 20px;
+}
+
+div.card-panel.sort {
+    padding: 10px;
+}
+
+label.sort + label.sort {
+    margin-left: 40px;
+}
+
+p.sort {
+    margin-top: 0;
+}
+
+table.highlight > tbody > tr:hover {
+    background-color: rgba(180, 220, 220, 0.5);
+}
+
+td + td, th + th {
+    border-left: 1px solid #d0d0d0;
+}
+
+td {
+    padding: 5px;
+}
+
+table.cities {
+    table-layout: fixed;
+}
+
+table.cities > th {
+    width: 50%;
 }

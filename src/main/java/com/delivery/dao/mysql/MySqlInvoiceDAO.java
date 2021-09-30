@@ -4,6 +4,7 @@ package com.delivery.dao.mysql;
 import com.delivery.dao.InvoiceDAO;
 import com.delivery.dao.mysql.queries.MySqlQueries;
 import com.delivery.entity.Invoice;
+import com.delivery.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -129,8 +130,78 @@ public class MySqlInvoiceDAO implements InvoiceDAO {
 	}
 
 	@Override
-	public void update(Connection connection, Invoice invoice) {
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	public void update(Connection connection, Invoice invoice) throws SQLException {
+		PreparedStatement st = null;
+		try {
+			st = connection.prepareStatement(MySqlQueries.UPDATE_INVOICE_BY_STATUS);
+			int k = 0;
+			st.setLong(++k, invoice.getInvoiceStatusId());
+			st.setLong(++k, invoice.getId());
+			st.executeUpdate();
+		} finally {
+			MySqlDAOFactory.getInstance().close(st);
+		}
+	}
+
+	@Override
+	public List<Invoice> getInvoices(Connection connection, User user, String sortBy, int statusId, String itemsOnPage, int page) throws SQLException {
+		List<Invoice> invoices = new ArrayList<>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		String query = MySqlQueries.SELECT_ALL_INVOICE;
+		if (statusId != -1 && user != null) {
+			query += MySqlQueries.INVOICE_BY_STATUS_ID_USER_ID;
+		} else if (statusId != -1) {
+			query += MySqlQueries.INVOICE_BY_STATUS_ID;
+		} else if (user != null) {
+			query += MySqlQueries.INVOICE_BY_USER_ID;
+		}
+		switch (sortBy) {
+			case "ID asc":
+				query += MySqlQueries.ORDER_BY_ID_ASC;
+				break;
+			case "ID desc":
+				query += MySqlQueries.ORDER_BY_ID_DESC;
+				break;
+			case "estimate asc":
+				query += MySqlQueries.ORDER_BY_ESTIMATE_ASC;
+				break;
+			case "estimate desc":
+				query += MySqlQueries.ORDER_BY_ESTIMATE_DESC;
+				break;
+		}
+		if (!"all".equals(itemsOnPage)) {
+			query += MySqlQueries.LIMIT;
+		}
+
+		// log
+		System.out.println("query = " + query);
+
+		try {
+			st = connection.prepareStatement(query);
+			int k = 0;
+			if (statusId != -1 && user != null) {
+				st.setInt(++k, statusId);
+				st.setLong(++k, user.getId());
+			} else if (statusId != -1) {
+				st.setInt(++k, statusId);
+			} else if (user != null) {
+				st.setLong(++k, user.getId());
+			}
+			if (!"all".equals(itemsOnPage)) {
+				st.setInt(++k, Integer.parseInt(itemsOnPage) * (page - 1));
+				st.setInt(++k, Integer.parseInt(itemsOnPage));
+			}
+			rs = st.executeQuery();
+			while (rs.next()) {
+				invoices.add(parseResultSet(rs));
+			}
+		} finally {
+			MySqlDAOFactory.getInstance().close(rs);
+			MySqlDAOFactory.getInstance().close(st);
+		}
+		return invoices;
 	}
 
 	private Invoice parseResultSet(ResultSet rs) throws SQLException {

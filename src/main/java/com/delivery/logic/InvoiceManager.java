@@ -450,7 +450,7 @@ public class InvoiceManager {
 
 		receipt.setId(invoice.getId());
 		receipt.setReceiptStatusId(daoFactory.getReceiptStatusDAO().getByName(con, ReceiptStatus.Status.NOT_PAID).getId());
-		receipt.setToPay(Math.round(toPay*100d)/100d);
+		receipt.setToPay(Math.round(toPay * 100d) / 100d);
 
 		System.out.println("receipt ==> " + receipt);
 		System.out.println("tariffZone ==> " + tariffZone);
@@ -585,5 +585,129 @@ public class InvoiceManager {
 			daoFactory.close(con);
 		}
 		return receipt;
+	}
+
+	public List<Invoice> getInvoices(User user, String sortBy, String filterBy, String itemsOnPage, int page) throws DAOException {
+		List<Invoice> invoices;
+		int statusId = -1;
+		Connection con = null;
+		try {
+			con = daoFactory.getConnection();
+			if (!"all".equals(filterBy)) {
+				statusId = daoFactory.getInvoiceStatusDAO().getByName(con, InvoiceStatus.Status.fromString(filterBy)).getId();
+			}
+			invoices = daoFactory.getInvoiceDAO().getInvoices(con, user, sortBy, statusId, itemsOnPage, page);
+			con.commit();
+		} catch (SQLException ex) {
+			// log
+			System.err.println(ex.getMessage());
+
+			// rollback
+			daoFactory.rollback(con);
+
+			// throw my own exception
+			throw new DAOException("Can't obtain invoices", ex);
+		} finally {
+			// close connection
+			daoFactory.close(con);
+		}
+		return invoices;
+	}
+
+	public int getPagesCountForInvoices(User user, String filterBy, String itemsOnPage) throws DAOException {
+		int pagesCount;
+		List<Invoice> invoices;
+		int statusId = -1;
+		Connection con = null;
+		try {
+			con = daoFactory.getConnection();
+
+			if ("all".equals(itemsOnPage)) {
+				pagesCount = 1;
+			} else {
+				if (!"all".equals(filterBy)) {
+					statusId = daoFactory.getInvoiceStatusDAO().getByName(con, InvoiceStatus.Status.fromString(filterBy)).getId();
+				}
+				invoices = daoFactory.getInvoiceDAO().getInvoices(con, user, "none", statusId, "all", 1);
+				pagesCount = (int) Math.ceil(invoices.size() / Double.parseDouble(itemsOnPage));
+			}
+
+			con.commit();
+		} catch (SQLException ex) {
+			// log
+			System.err.println(ex.getMessage());
+
+			// rollback
+			daoFactory.rollback(con);
+
+			// throw my own exception
+			throw new DAOException("Can't count pages for invoices", ex);
+		} finally {
+			// close connection
+			daoFactory.close(con);
+		}
+		return pagesCount;
+	}
+
+	public List<Receipt> getReceipts(User user, String sortBy, String filterBy, String itemsOnPage, int page) throws DAOException {
+		List<Receipt> receipts;
+		int statusId = -1;
+		Connection con = null;
+		try {
+			con = daoFactory.getConnection();
+			if (!"all".equals(filterBy)) {
+				statusId = daoFactory.getReceiptStatusDAO().getByName(con, ReceiptStatus.Status.fromString(filterBy)).getId();
+			}
+			receipts = daoFactory.getReceiptDAO().getReceipts(con, user, sortBy, statusId, itemsOnPage, page);
+			con.commit();
+		} catch (SQLException ex) {
+			// log
+			System.err.println(ex.getMessage());
+
+			// rollback
+			daoFactory.rollback(con);
+
+			// throw my own exception
+			throw new DAOException("Can't obtain receipts", ex);
+		} finally {
+			// close connection
+			daoFactory.close(con);
+		}
+		return receipts;
+	}
+
+	public int getPagesCountForReceipts(User user, String filterBy, String itemsOnPage) throws DAOException {
+		int pagesCount;
+		List<Receipt> receipts;
+		int statusId = -1;
+		Connection con = null;
+		try {
+			con = daoFactory.getConnection();
+
+			if ("all".equals(itemsOnPage)) {
+				pagesCount = 1;
+			} else {
+				if (!"all".equals(filterBy)) {
+					statusId = daoFactory.getReceiptStatusDAO().getByName(con, ReceiptStatus.Status.fromString(filterBy)).getId();
+				}
+				receipts = daoFactory.getReceiptDAO().getReceipts(con, user, "none", statusId, "all", 1);
+				pagesCount = (int) Math.ceil(receipts.size() / Double.parseDouble(itemsOnPage));
+			}
+
+			con.commit();
+		} catch (SQLException ex) {
+			// log
+			System.err.println(ex.getMessage());
+
+			// rollback
+			daoFactory.rollback(con);
+
+			// throw my own exception
+			throw new DAOException("Can't count pages for receipts", ex);
+		} finally {
+			// close connection
+			daoFactory.close(con);
+		}
+		return pagesCount;
 	}
 }

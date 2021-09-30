@@ -15,5 +15,7 @@ public interface CityDAO {
 
 	List<City> getAll(Connection connection) throws SQLException;
 
+	List<City> getCities(Connection connection, String sortBy, int regionId, String itemsOnPage, int page) throws SQLException;
+
 	City insert(Connection connection, City city) throws SQLException;
 }

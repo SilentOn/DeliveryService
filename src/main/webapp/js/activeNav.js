@@ -1,8 +1,11 @@
-window.onload = function () {
+window.addEventListener("load", activeNav);
+
+function activeNav() {
     var nav_links = document.querySelectorAll(".nav-wrapper>div>ul>li");
-    console.log(window.location.href);
+    var url = window.location.href.split('?')[0];
+    console.log(url);
     for (var i = 0; i < nav_links.length; i++) {
-        if (nav_links[i].getElementsByTagName("a")[0].href === window.location.href) {
+        if (nav_links[i].getElementsByTagName("a")[0].href === url) {
             nav_links[i].className += 'active';
         }
     }

@@ -1,6 +1,9 @@
 package com.delivery.dao.mysql.queries;
 
 public class MySqlQueries {
+	public static final String LIMIT = " limit ?,?";
+	public static final String ORDER_BY_ID_ASC = " order by id asc";
+	public static final String ORDER_BY_ID_DESC = " order by id desc";
 	// for user
 	public static final String INSERT_INTO_USER = "INSERT INTO user (`phone_number`, `password`, `role_id`) " +
 			"VALUES (?, ?, (select id from role where name=?))";
@@ -26,8 +29,15 @@ public class MySqlQueries {
 	public static final String INSERT_INTO_INVOICE = "INSERT INTO invoice " +
 			" VALUES (DEFAULT, ?, ?, ?, ?, null, ?, DEFAULT, ?, ?, ?, ?, ?)";
 	public static final String SELECT_ALL_INVOICE = "select * from invoice";
+	public static final String INVOICE_BY_STATUS_ID = " WHERE invoice_status_id=?";
+	public static final String INVOICE_BY_USER_ID = " WHERE user_id=?";
+	public static final String INVOICE_BY_STATUS_ID_USER_ID = " WHERE invoice_status_id=? AND user_id=?";
+	public static final String ORDER_BY_ESTIMATE_ASC = " order by estimate asc";
+	public static final String ORDER_BY_ESTIMATE_DESC = " order by estimate desc";
 	public static final String SELECT_INVOICE_BY_ID = "select * from invoice where id=?";
 	public static final String SELECT_INVOICE_BY_USER_ID = "select * from invoice where user_id=?";
+	public static final String UPDATE_INVOICE_BY_STATUS = "UPDATE invoice SET" +
+			"`invoice_status_id`=? WHERE `id` = ?";
 	public static final String UPDATE_INVOICE_BY_PROCESSED = "UPDATE invoice SET" +
 			"`processed_by_id`=?, `invoice_status_id`=? WHERE `id` = ?";
 
@@ -47,6 +57,13 @@ public class MySqlQueries {
 
 	// for receipt
 	public static final String SELECT_ALL_RECEIPT = "select * from receipt";
+	public static final String SELECT_RECEIPT_JOIN_INVOICE = "SELECT receipt.id, receipt.to_pay, receipt.receipt_status_id, user_id " +
+			"FROM delivery_service.receipt JOIN delivery_service.invoice " +
+			"WHERE delivery_service.receipt.id = delivery_service.invoice.id";
+	public static final String RECEIPT_BY_STATUS_ID = " AND receipt_status_id=?";
+	public static final String RECEIPT_BY_USER_ID = " AND user_id=?";
+	public static final String ORDER_BY_TO_PAY_ASC = " order by to_pay asc";
+	public static final String ORDER_BY_TO_PAY_DESC = " order by to_pay desc";
 	public static final String SELECT_RECEIPT_BY_ID = "select * from receipt where id=?";
 	public static final String SELECT_RECEIPT_BY_RECEIPT_STATUS_ID = "select * from receipt where receipt_status_id=?";
 	public static final String INSERT_INTO_RECEIPT = "INSERT INTO receipt VALUES (?, ?, ?)";
@@ -69,6 +86,14 @@ public class MySqlQueries {
 
 	// for city
 	public static final String SELECT_ALL_CITY = "select * from city";
+	public static final String SELECT_CITY_JOIN_REGION = "SELECT city.id, city.city, city.region_id " +
+			"FROM delivery_service.city JOIN delivery_service.region " +
+			"WHERE delivery_service.city.region_id = delivery_service.region.id";
+	public static final String CITY_BY_REGION_ID = " AND region_id=?";
+	public static final String ORDER_BY_CITY_ASC = " order by city COLLATE  utf8_unicode_ci asc";
+	public static final String ORDER_BY_CITY_DESC = " order by city COLLATE  utf8_unicode_ci desc";
+	public static final String ORDER_BY_REGION_ASC = " order by region COLLATE  utf8_unicode_ci asc";
+	public static final String ORDER_BY_REGION_DESC = " order by region COLLATE  utf8_unicode_ci desc";
 	public static final String SELECT_CITY_BY_ID = "select * from city where id=?";
 	public static final String SELECT_CITY_BY_CITY_TITLE_AND_REGION_ID = "select * from city where city=? and region_id=?";
 	public static final String SELECT_CITY_BY_REGION_ID = "select * from city where region_id=?";

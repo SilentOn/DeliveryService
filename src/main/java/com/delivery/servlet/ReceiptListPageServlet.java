@@ -4,10 +4,8 @@ import com.delivery.dao.DAOException;
 import com.delivery.dao.DAOFactory;
 import com.delivery.entity.Receipt;
 import com.delivery.entity.ReceiptStatus;
-import com.delivery.entity.Role;
 import com.delivery.entity.User;
 import com.delivery.logic.InvoiceManager;
-import com.delivery.logic.UserManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,21 +27,37 @@ public class ReceiptListPageServlet extends HttpServlet {
 		log.trace("ReceiptListPageServlet#doGet");
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
+		boolean isManager = (boolean) session.getAttribute("isManager");
 
 		String forward = "/jsp/receiptList.jsp";
 
 		List<Receipt> receipts = null;
 		List<ReceiptStatus> receiptStatuses = null;
+		Integer pagesCount = null;
+		String sortBy = request.getParameter("sort");
+		String filterBy = request.getParameter("filter");
+		String itemsOnPage = request.getParameter("itemsOnPage");
+		String pageString = request.getParameter("p");
+		if (sortBy == null || filterBy == null || itemsOnPage == null) {
+			sortBy = "none";
+			filterBy = "all";
+			itemsOnPage = "5";
+		}
+		if (pageString == null) {
+			pageString = "1";
+		}
+		int page = Integer.parseInt(pageString);
+
+		request.getParameterMap().forEach((o, o2) -> log.debug("key: {}; value: {}", o, ((String[]) o2)[0]));
 
 		try {
-			Role role = UserManager.getInstance(DAOFactory.getDAOFactory()).getRole(user.getRoleId());
-
-			if (role.getName() == Role.RoleName.USER) {
-				receipts = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllReceipts(user);
-			} else {
-				receipts = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllReceipts();
-			}
 			receiptStatuses = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllReceiptStatuses();
+
+			if (isManager) {
+				user = null;
+			}
+			receipts = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getReceipts(user, sortBy, filterBy, itemsOnPage, page);
+			pagesCount = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getPagesCountForReceipts(user, filterBy, itemsOnPage);
 		} catch (DAOException ex) {
 			log.error("can not obtain receipts", ex);
 			session.setAttribute("errorMessage", "can not obtain receipts");
@@ -52,6 +66,8 @@ public class ReceiptListPageServlet extends HttpServlet {
 
 		request.setAttribute("receipts", receipts);
 		request.setAttribute("receiptStatuses", receiptStatuses);
+		request.setAttribute("pagesCount", pagesCount);
+		request.setAttribute("page", page);
 		request.getRequestDispatcher(forward).forward(request, response);
 	}
 }

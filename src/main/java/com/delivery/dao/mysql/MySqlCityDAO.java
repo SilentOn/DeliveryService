@@ -80,6 +80,58 @@ public class MySqlCityDAO implements CityDAO {
 	}
 
 	@Override
+	public List<City> getCities(Connection connection, String sortBy, int regionId, String itemsOnPage, int page) throws SQLException {
+		List<City> cities = new ArrayList<>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		String query = MySqlQueries.SELECT_CITY_JOIN_REGION;
+		if (regionId != -1) {
+			query = "(" + query + MySqlQueries.CITY_BY_REGION_ID + ")";
+		}
+		switch (sortBy) {
+			case "region asc":
+				query += MySqlQueries.ORDER_BY_REGION_ASC;
+				break;
+			case "region desc":
+				query += MySqlQueries.ORDER_BY_REGION_DESC;
+				break;
+			case "city asc":
+				query += MySqlQueries.ORDER_BY_CITY_ASC;
+				break;
+			case "city desc":
+				query += MySqlQueries.ORDER_BY_CITY_DESC;
+				break;
+		}
+		if (!"all".equals(itemsOnPage)) {
+			query += MySqlQueries.LIMIT;
+		}
+
+		// log
+		System.out.println("query = " + query);
+
+		try {
+			st = connection.prepareStatement(query);
+			int k = 0;
+			if (regionId != -1) {
+				st.setInt(++k, regionId);
+			}
+			if (!"all".equals(itemsOnPage)) {
+				st.setInt(++k, Integer.parseInt(itemsOnPage) * (page - 1));
+				st.setInt(++k, Integer.parseInt(itemsOnPage));
+			}
+			rs = st.executeQuery();
+			while (rs.next()) {
+				cities.add(parseResultSet(rs));
+			}
+		} finally {
+			MySqlDAOFactory.getInstance().close(rs);
+			MySqlDAOFactory.getInstance().close(st);
+		}
+		return cities;
+	}
+
+	@Override
 	public List<City> getByRegionId(Connection connection, int regionId) throws SQLException {
 		List<City> cities = new ArrayList<>();
 		PreparedStatement st = null;

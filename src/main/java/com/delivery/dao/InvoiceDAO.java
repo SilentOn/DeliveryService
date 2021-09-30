@@ -1,6 +1,7 @@
 package com.delivery.dao;
 
 import com.delivery.entity.Invoice;
+import com.delivery.entity.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,5 +18,7 @@ public interface InvoiceDAO {
 
 	void process(Connection connection, Invoice invoice) throws SQLException;
 
-	void update(Connection connection, Invoice invoice);
+	void update(Connection connection, Invoice invoice) throws SQLException;
+
+	List<Invoice> getInvoices(Connection connection, User user, String sortBy, int statusId, String itemsOnPage, int page) throws SQLException;
 }

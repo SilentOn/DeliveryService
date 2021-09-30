@@ -1,6 +1,7 @@
 package com.delivery.dao;
 
 import com.delivery.entity.Receipt;
+import com.delivery.entity.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,4 +17,6 @@ public interface ReceiptDAO {
 	void insert(Connection connection, Receipt receipt) throws SQLException;
 
 	void update(Connection connection, Receipt receipt) throws SQLException;
+
+	List<Receipt> getReceipts(Connection connection, User user, String sortBy, int statusId, String itemsOnPage, int page) throws SQLException;
 }

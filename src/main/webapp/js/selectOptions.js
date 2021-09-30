@@ -1,4 +1,6 @@
-window.onload = function () {
+window.addEventListener("load", selectOptions);
+
+function selectOptions() {
     var regionFrom = document.getElementById("invoiceRegionFrom");
 
     var cityFrom = document.getElementById("invoiceCityFrom");

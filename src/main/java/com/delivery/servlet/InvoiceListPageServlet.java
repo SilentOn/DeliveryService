@@ -5,7 +5,6 @@ import com.delivery.dao.DAOFactory;
 import com.delivery.entity.*;
 import com.delivery.logic.InvoiceManager;
 import com.delivery.logic.RegionManager;
-import com.delivery.logic.UserManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,6 +26,7 @@ public class InvoiceListPageServlet extends HttpServlet {
 		log.trace("InvoiceListPageServlet#doGet");
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
+		boolean isManager = (boolean) session.getAttribute("isManager");
 
 		String forward = "/jsp/invoiceList.jsp";
 
@@ -34,18 +34,33 @@ public class InvoiceListPageServlet extends HttpServlet {
 		List<City> cities = null;
 		List<InvoiceStatus> invoiceStatuses = null;
 		List<Address> addresses = null;
+		Integer pagesCount = null;
+		String sortBy = request.getParameter("sort");
+		String filterBy = request.getParameter("filter");
+		String itemsOnPage = request.getParameter("itemsOnPage");
+		String pageString = request.getParameter("p");
+		if (sortBy == null || filterBy == null || itemsOnPage == null) {
+			sortBy = "none";
+			filterBy = "all";
+			itemsOnPage = "5";
+		}
+		if (pageString == null) {
+			pageString = "1";
+		}
+		int page = Integer.parseInt(pageString);
+
+		request.getParameterMap().forEach((o, o2) -> log.debug("key: {}; value: {}", o, ((String[]) o2)[0]));
 
 		try {
-			Role role = UserManager.getInstance(DAOFactory.getDAOFactory()).getRole(user.getRoleId());
-
-			if (role.getName() == Role.RoleName.USER) {
-				invoices = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllInvoiceByUser(user);
-			} else {
-				invoices = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAll();
-			}
 			cities = RegionManager.getInstance(DAOFactory.getDAOFactory()).getAllCities();
 			invoiceStatuses = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllInvoiceStatuses();
 			addresses = RegionManager.getInstance(DAOFactory.getDAOFactory()).getAllAddresses();
+
+			if (isManager) {
+				user = null;
+			}
+			invoices = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getInvoices(user, sortBy, filterBy, itemsOnPage, page);
+			pagesCount = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getPagesCountForInvoices(user, filterBy, itemsOnPage);
 		} catch (DAOException ex) {
 			log.error("can not obtain invoices", ex);
 			session.setAttribute("errorMessage", "can not obtain invoices");
@@ -56,6 +71,8 @@ public class InvoiceListPageServlet extends HttpServlet {
 		request.setAttribute("cities", cities);
 		request.setAttribute("invoiceStatuses", invoiceStatuses);
 		request.setAttribute("addresses", addresses);
+		request.setAttribute("pagesCount", pagesCount);
+		request.setAttribute("page", page);
 		request.getRequestDispatcher(forward).forward(request, response);
 	}
 }
