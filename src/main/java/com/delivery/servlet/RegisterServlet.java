@@ -2,6 +2,7 @@ package com.delivery.servlet;
 
 import com.delivery.dao.DAOException;
 import com.delivery.dao.DAOFactory;
+import com.delivery.entity.Role;
 import com.delivery.entity.User;
 import com.delivery.logic.UserManager;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +36,13 @@ public class RegisterServlet extends HttpServlet {
 			User user = UserManager.getInstance(DAOFactory.getDAOFactory())
 					.registerUser(phoneNumber, password, email, firstName, lastName);
 
+			Role role = UserManager.getInstance(DAOFactory.getDAOFactory()).getRole(user.getRoleId());
+			boolean isManager = role != null && role.getName() == Role.RoleName.MANAGER;
+
+			// put user and isManager into session
 			session.setAttribute("user", user);
+			session.setAttribute("isManager", isManager);
+			log.info("user " + user.getPhoneNumber() + " logged in");
 		} catch (DAOException ex) {
 			log.error("Can't register user", ex);
 			session.setAttribute("errorMessage", "Can't register user");

@@ -5,6 +5,7 @@ import com.delivery.dao.DAOFactory;
 import com.delivery.entity.*;
 import com.delivery.logic.InvoiceManager;
 import com.delivery.logic.RegionManager;
+import com.delivery.logic.UserManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +32,7 @@ public class InvoiceListPageServlet extends HttpServlet {
 		String forward = "/jsp/invoiceList.jsp";
 
 		List<Invoice> invoices = null;
+		List<User> users = null;
 		List<City> cities = null;
 		List<InvoiceStatus> invoiceStatuses = null;
 		List<Address> addresses = null;
@@ -39,10 +41,12 @@ public class InvoiceListPageServlet extends HttpServlet {
 		String filterBy = request.getParameter("filter");
 		String itemsOnPage = request.getParameter("itemsOnPage");
 		String pageString = request.getParameter("p");
+		String filterByUser = request.getParameter("filterByUser");
 		if (sortBy == null || filterBy == null || itemsOnPage == null) {
 			sortBy = "none";
 			filterBy = "all";
 			itemsOnPage = "5";
+			filterByUser = "all";
 		}
 		if (pageString == null) {
 			pageString = "1";
@@ -56,10 +60,13 @@ public class InvoiceListPageServlet extends HttpServlet {
 			invoiceStatuses = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getAllInvoiceStatuses();
 			addresses = RegionManager.getInstance(DAOFactory.getDAOFactory()).getAllAddresses();
 
-			if (isManager) {
+			if (isManager && "all".equals(filterByUser)) {
 				user = null;
+			} else if (isManager) {
+				user = UserManager.getInstance(DAOFactory.getDAOFactory()).getById(Long.parseLong(filterByUser));
 			}
 			invoices = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getInvoices(user, sortBy, filterBy, itemsOnPage, page);
+			users = UserManager.getInstance(DAOFactory.getDAOFactory()).getAllUsers();
 			pagesCount = InvoiceManager.getInstance(DAOFactory.getDAOFactory()).getPagesCountForInvoices(user, filterBy, itemsOnPage);
 		} catch (DAOException ex) {
 			log.error("can not obtain invoices", ex);
@@ -68,6 +75,7 @@ public class InvoiceListPageServlet extends HttpServlet {
 		}
 
 		request.setAttribute("invoices", invoices);
+		request.setAttribute("users", users);
 		request.setAttribute("cities", cities);
 		request.setAttribute("invoiceStatuses", invoiceStatuses);
 		request.setAttribute("addresses", addresses);

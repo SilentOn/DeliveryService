@@ -72,6 +72,29 @@ public class UserManager {
 		return user;
 	}
 
+	public User getById(long id) throws DAOException {
+		User user = null;
+		Connection con = null;
+		try {
+			con = daoFactory.getConnection();
+			user = daoFactory.getUserDAO().getByPK(con, id);
+			con.commit();
+		} catch (SQLException e) {
+			// log
+			System.err.println(e.getMessage());
+
+			// rollback
+			daoFactory.rollback(con);
+
+			// throw my own exception
+			throw new DAOException("Can't obtain user", e);
+		} finally {
+			// close connection
+			daoFactory.close(con);
+		}
+		return user;
+	}
+
 	/*public void insertUser(User user) throws DAOException {
 		Connection con = null;
 		try {
@@ -332,5 +355,28 @@ public class UserManager {
 			daoFactory.close(con);
 		}
 		return roles;
+	}
+
+	public List<User> getAllUsers() throws DAOException {
+		List<User> users;
+		Connection con = null;
+		try {
+			con = daoFactory.getConnection();
+			users = daoFactory.getUserDAO().getAll(con);
+			con.commit();
+		} catch (SQLException e) {
+			// log
+			System.err.println(e.getMessage());
+
+			// rollback
+			daoFactory.rollback(con);
+
+			// throw my own exception
+			throw new DAOException("Can't obtain all users", e);
+		} finally {
+			// close connection
+			daoFactory.close(con);
+		}
+		return users;
 	}
 }

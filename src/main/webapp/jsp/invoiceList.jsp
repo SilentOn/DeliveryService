@@ -43,6 +43,20 @@
 						<span>estimate desc</span>
 					</label>
 				</div>
+				<c:if test="${sessionScope.isManager}">
+					<div class="col l2">
+						<label for="filterByUser" class="sort">Filter by user</label>
+						<select class="browser-default" id="filterByUser" name="filterByUser">
+							<option>all</option>
+
+							<c:forEach items="${requestScope.users}" var="user">
+								<option value="${user.id}">
+										${user.id}
+								</option>
+							</c:forEach>
+						</select>
+					</div>
+				</c:if>
 				<div class="col l2">
 					<label for="filter" class="sort">Filter by status</label>
 					<select class="browser-default" id="filter" name="filter">
